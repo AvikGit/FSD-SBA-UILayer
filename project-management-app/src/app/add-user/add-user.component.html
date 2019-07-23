@@ -1,0 +1,86 @@
+
+<form [formGroup]="myForm" (submit)="onSubmit()" class="form-horizontal">
+  
+  <div *ngIf="message!=''" class={{alertClass}} role="alert">
+    {{message}}
+  </div>
+  
+
+  <div class="row mb-2 mt-2">
+    <label for="firstName">First Name:&nbsp; &nbsp;  </label>
+      <div class="col-6 col-md-6 input-group-prepend">          
+          <input type="hidden" class="form-control" id="userId" name="userId" formControlName="userId">
+          <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" required>
+      </div>
+      <small *ngIf="!myForm.controls['firstName'].valid && myForm.controls['firstName'].dirty">Invalid First Name!!</small>
+  </div>
+
+  <div class="row mb-2 mt-2">
+      <label for="lastName">Last Name: &nbsp;&nbsp;  </label>
+        <div class="col-6 col-md-6 input-group-prepend">          
+            <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" required>
+        </div>
+        <small *ngIf="!myForm.controls['lastName'].valid && myForm.controls['lastName'].dirty">Invalid Last Name!!</small>
+  </div>
+
+  <div class="row mb-2 mt-2">
+      <label for="employeeId">Employee Id: </label>
+        <div class="col-6 col-md-6 input-group-prepend">          
+            <input type="number" class="form-control" id="employeeId" name="employeeId" formControlName="employeeId" min="100000" max="999999" step="1" required> 
+        </div>
+        <small *ngIf="!myForm.controls['employeeId'].valid && myForm.controls['employeeId'].dirty">Please enter valid Employee Id!!</small>
+    </div>
+
+  <ng-container>
+      <div *ngIf="editButtonCheck == true">
+          <button type="button" (click)="updateUser()" class="btn btn-primary" [disabled]="!myForm.valid">Update</button>
+          &nbsp;<button type="button" (click)="resetUser()" class="btn btn-primary">Reset</button>
+      </div>
+      <div *ngIf="editButtonCheck == false">
+          <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Add</button> 
+          &nbsp;<button type="button" (click)="resetUser()" class="btn btn-primary">Reset</button>
+      </div>
+    </ng-container>
+
+<div class="row mb-2 mt-2">
+    <div class="col-12 col-md-12 input-group-prepend">
+      <input #userIdSearch (change)="0" type="text" class="form-control" aria-label="User" placeholder="Search by User Id"
+      aria-describedby="basic-addon1">
+      &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="sortUserTable(1)" class="btn">First Name</button>
+      &nbsp;<button type="button" onclick="sortUserTable(2)" class="btn">Last Name</button>
+      &nbsp;<button type="button" onclick="sortUserTable(3)" class="btn">Employee Id</button>
+    </div>
+</div>
+
+<table class="table" id="userTable">
+    <thead>
+      <tr>
+        <th scope="col">Sl#</th>
+        <th scope="col">User Id</th>        
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Employee Id</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users | userFilter: userIdSearch.value; let i= index">
+        <th scope="row" >{{i+1}}</th>
+        <td><a class="nav-link active" routerLink="/editUser/{{user.userId}}">{{user.userId}}</a></td>
+        <td>{{user.firstName}}</td>
+        <td>{{user.lastName}}</td>
+        <td>{{user.employeeId}}</td>
+        <td>
+            
+          <ng-container>
+              <button type="button" (click)="deleteUser(user.userId)" class="btn btn-danger">Delete User</button>
+          </ng-container>
+          
+        </td>
+      </tr>
+      
+    </tbody>
+  </table>
+    <form>
+
+        

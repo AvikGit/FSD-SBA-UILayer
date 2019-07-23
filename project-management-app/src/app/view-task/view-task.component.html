@@ -1,0 +1,54 @@
+
+<div *ngIf="message!=''" class={{alertClass}} role="alert">
+    {{message}}
+  </div>
+  
+  <div class="row mb-2 mt-2">
+    <div class="col-12 col-md-12 input-group-prepend">
+      <select [(ngModel)]="projectModel" id="category" class="form-control">
+        <option value="" selected>Select a Project &nbsp;&nbsp;&nbsp;&nbsp; </option>
+        <option *ngFor="let project of projects" [value]="project.projectId">{{project.projectId}} - {{project.project}}</option>
+      </select>
+      &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="sortTaskTable(0)" class="btn">Task</button>
+      &nbsp;<button type="button" onclick="sortTaskTable(1)" class="btn">Parent Task</button>
+      &nbsp;<button type="button" onclick="sortTaskTable(2)" class="btn">Priority</button>
+    </div>
+</div>  
+<br>
+
+  <table class="table" id="taskTable">
+      <thead>
+        <tr>
+          <th scope="col">Sl#</th>
+          <th scope="col">Task</th>        
+          <th scope="col">Parent Task</th>
+          <th scope="col">Priority</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks | taskFilter: projectModel ; let i= index">
+          <th scope="row">{{i+1}}</th>
+          <td><a class="nav-link active" routerLink="/edit/{{task.taskId}}">{{task.task}}</a></td>
+          <td>{{task.parentTask}}</td>
+          <td>{{task.priority}}</td>
+          <td>{{task.stStartDate}}</td>
+          <td>{{task.stEndDate}}</td>
+    
+    
+         
+          <td>
+              
+            <ng-container *ngIf="task.taskStatus === 1; else else1">
+                <button type="button" (click)="updateTaskStatus(task.taskId)" class="btn btn-danger">End Task</button>
+            </ng-container>
+            <ng-template #else1>
+                <button type="button" class="btn btn-danger" disabled>End Task</button>
+            </ng-template>
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>

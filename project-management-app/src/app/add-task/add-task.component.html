@@ -1,0 +1,94 @@
+
+<form [formGroup]="myForm" (submit)="onSubmit()">
+    
+    <div *ngIf="message!=''" class={{alertClass}} role="alert">
+      {{message}}
+    </div>
+
+    <div class="row mb-2 mt-2 date">
+        <label for="projectIdLvl">Project: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <div class="col-6 col-md-6 input-group-prepend">          
+              <select id="category" formControlName="projectId" class="form-control">
+                  <option value="" selected>Select Project  &nbsp;&nbsp;&nbsp;&nbsp; </option>
+                  <option *ngFor="let project of projects" [value]="project.projectId">{{project.projectId}} - {{project.project}}</option>
+                </select>
+          </div>
+      </div>
+
+    <div class="row mb-2 mt-2 date">
+        <label for="task">Task: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <div class="col-6 col-md-6 input-group-prepend">        
+              <input type="hidden" class="form-control" id="taskId" name="taskId" formControlName="taskId">
+              <input type="hidden" class="form-control" id="taskStatus" name="taskStatus" formControlName="taskStatus">
+              <input type="text" class="form-control" id="task" name="task" formControlName="task">
+          </div>
+          <small *ngIf="!myForm.controls['task'].valid && myForm.controls['task'].dirty">Invalid Task!!</small>
+      </div>
+
+    <div>
+      <input type="checkbox"  (change)="enableDisableTaskFields()" id="parentCheck" name="parentCheck" formControlName="parentCheck"> 
+      &nbsp;&nbsp;<label>Parent Task</label>
+    </div>
+  
+    <div class="row mb-2 mt-2 date">
+        <label for="priority">Priority - {{myForm.controls['priority'].value}}&nbsp;</label>
+          <div class="col-6 col-md-6 input-group-prepend">          
+              <input type="range" class="custom-range" min="0" max="30" step="1" 
+              id="priority" name="priority" formControlName="priority">
+          </div>
+      </div>
+    <div class="row mb-2 mt-2 date">
+        <label for="parentIdLvl">Parent Task:</label>
+          <div class="col-6 col-md-6 input-group-prepend">          
+              <select id="category" formControlName="parentId" class="form-control">
+                  <option value="" selected>Select Parent Task  &nbsp;&nbsp;&nbsp;&nbsp; </option>
+                  <option *ngFor="let parenttask of parentTasks" [value]="parenttask.parentId">{{parenttask.parentId}} - {{parenttask.parentTaskDesc}}</option>
+                </select>
+          </div>
+      </div>
+    <div class="row mb-2 mt-2 date">
+        <label for="stStartDate">Start Date: &nbsp;&nbsp;</label>
+          <div class="col-6 col-md-6 input-group-prepend">          
+              <input type="date" class="form-control" id="stStartDate" name="stStartDate" formControlName="stStartDate">
+          </div>
+          <small *ngIf="!myForm.controls['stStartDate'].valid && myForm.controls['stStartDate'].dirty">Invalid Start Date!!</small>
+      </div>
+    <div class="row mb-2 mt-2 date">
+        <label for="stEndDate">End Date: &nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <div class="col-6 col-md-6 input-group-prepend">          
+              <input type="date" class="form-control" id="stEndDate" name="stEndDate" formControlName="stEndDate">
+          </div>
+          <small *ngIf="!myForm.controls['stEndDate'].valid && myForm.controls['stEndDate'].dirty">Invalid End Date!!</small>
+      </div>
+    <div class="row mb-2 mt-2 date">
+        <label for="userIdLvl">User: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <div class="col-6 col-md-6 input-group-prepend">          
+              <select id="category" formControlName="userId" class="form-control">
+                  <option value="" selected>Select User  &nbsp;&nbsp;&nbsp;&nbsp; </option>
+                  <option *ngFor="let user of users" [value]="user.userId">{{user.userId}} - {{user.firstName}} {{user.lastName}}</option>
+                </select>
+          </div>
+      </div>
+    
+    <ng-container *ngIf="myForm.controls['taskStatus'].value === 1; else else1">
+        <div *ngIf="editButtonCheck == true">
+            <button type="button" (click)="updateTask()" class="btn btn-primary" [disabled]="!myForm.valid">Update</button>   
+            &nbsp;<button type="button" (click)="resetTask()" class="btn btn-primary">Reset</button>
+        </div>
+        <div *ngIf="editButtonCheck == false">
+            <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Add Task</button>
+            &nbsp;<button type="button" (click)="resetTask()" class="btn btn-primary">Reset</button>
+        </div>
+    </ng-container>
+    <ng-template #else1>
+        <div *ngIf="editButtonCheck == true">
+            <button type="button" class="btn btn-primary" disabled>Update</button>
+            &nbsp;<button type="button" class="btn btn-primary" disabled>Reset</button>
+        </div>
+        <div *ngIf="editButtonCheck == false">
+            <button type="button" class="btn btn-primary" disabled>Add Task</button>
+            &nbsp;<button type="button" class="btn btn-primary" disabled>Reset</button>
+        </div>
+    </ng-template>
+  
+      <form>

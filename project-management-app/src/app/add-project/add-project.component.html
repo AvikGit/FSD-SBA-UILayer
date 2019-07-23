@@ -1,0 +1,109 @@
+
+<form [formGroup]="myForm" (submit)="onSubmit()" class="form-horizontal">
+  
+  <div *ngIf="message!=''" class={{alertClass}} role="alert">
+    {{message}}
+  </div>
+  
+
+  <div class="row mb-2 mt-2">
+      <label for="project">Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <div class="col-6 col-md-6 input-group-prepend">          
+            <input type="hidden" class="form-control" id="projectId" name="projectId" formControlName="projectId">
+            <input type="text" class="form-control" id="project" name="project" formControlName="project" required>
+        </div>
+        <small *ngIf="!myForm.controls['project'].valid && myForm.controls['project'].dirty">Invalid Project Name!!</small>
+    </div>
+
+  <div>
+    <label><input type="checkbox" (change)="enableDisableDateFields()"  id="dateCheck" name="dateCheck" formControlName="dateCheck" checked>  Set Start and End Date</label>
+  </div>
+
+  <div class="row mb-2 mt-2 date">
+      <label for="stStartDate">Start Date:</label>
+        <div class="col-6 col-md-6 input-group-prepend">          
+            <input type="date" class="form-control" id="stStartDate" name="stStartDate" formControlName="stStartDate">
+        </div>
+        <small *ngIf="!myForm.controls['stStartDate'].valid && myForm.controls['stStartDate'].dirty">Invalid Start Date!!</small>
+    </div>
+
+  <div class="row mb-2 mt-2 date">
+      <label for="stEndDate">End Date:&nbsp;&nbsp;</label>
+        <div class="col-6 col-md-6 input-group-prepend">          
+            <input type="date" class="form-control" id="stEndDate" name="stEndDate" formControlName="stEndDate">
+        </div>
+        <small *ngIf="!myForm.controls['stEndDate'].valid && myForm.controls['stEndDate'].dirty">Invalid End Date!!</small>
+    </div>
+
+  <div class="row mb-2 mt-2 date">
+      <label for="priority">Priority - {{myForm.controls['priority'].value}}</label>
+        <div class="col-6 col-md-6 input-group-prepend">          
+            <input type="range" class="custom-range" min="0" max="30" step="1" id="customRange3" 
+            id="priority" name="priority" formControlName="priority">
+        </div>
+    </div>
+
+  <div class="row mb-2 mt-2 date">
+      <label for="userIdLvl">Manager: &nbsp;&nbsp;</label>
+        <div class="col-6 col-md-6 input-group-prepend">          
+            <select id="category" formControlName="userId"  class="form-control">
+                <option value="" selected>Select Project Manager &nbsp;&nbsp;&nbsp;&nbsp; </option>
+                <option *ngFor="let user of users" [value]="user.userId">{{user.userId}} - {{user.firstName}} {{user.lastName}}</option>
+              </select>
+        </div>
+    </div>
+  
+  <ng-container>
+    <div *ngIf="editButtonCheck == true">
+        <button type="button" (click)="updateProject()" class="btn btn-primary" [disabled]="!myForm.valid">Update</button>
+        &nbsp;<button type="button" (click)="resetProject()" class="btn btn-primary">Reset</button>
+    </div>
+    <div *ngIf="editButtonCheck == false">
+        <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Add</button> 
+        &nbsp;<button type="button" (click)="resetProject()" class="btn btn-primary">Reset</button>
+    </div>
+  </ng-container>
+
+  <div class="row mb-2 mt-2">
+      <div class="col-12 col-md-12 input-group-prepend">
+        <input #projectIdSearch (change)="0" type="text" class="form-control" aria-label="User" placeholder="Search by Project Id"
+        aria-describedby="basic-addon1">
+        &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="sortProjectTable(4)" class="btn">Priority</button>
+        &nbsp;<button type="button" onclick="sortProjectTable(5)" class="btn">Number of Task</button>
+      </div>
+  </div>
+
+<table class="table" id="projectTable">
+  <thead>
+    <tr>
+      <th scope="col">Sl#</th>
+      <th scope="col">Project Id</th>        
+      <th scope="col">Project</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Priority</th>
+      <th scope="col"># of Task(s)</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let project of projects | projectFilter: projectIdSearch.value; let i= index">
+      <th scope="row" >{{i+1}}</th>
+      <td><a class="nav-link active" routerLink="/editProject/{{project.projectId}}">{{project.projectId}}</a></td>
+      <td>{{project.project}}</td>
+      <td>{{project.stStartDate}}</td>
+      <td>{{project.stEndDate}}</td>
+      <td>{{project.priority}}</td>
+      <td>{{project.taskCount}}</td>
+      <td>
+          
+        <ng-container>
+            <button type="button" (click)="deleteProject(project.projectId)" class="btn btn-danger">Disable Project</button>
+        </ng-container>
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+    <form>
